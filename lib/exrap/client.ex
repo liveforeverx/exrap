@@ -15,22 +15,26 @@ defmodule Exrap.Client do
     end
   end
 
+  def request({:pool, pool}, method, path, headers, body) do
+    :poolboy.transaction pool, &Connection.send(&1, method, path, headers, body)
+  end
   def request(app, method, path, headers, body) do
-    :poolboy.transaction :"#{app}_pool", &Connection.send(&1, method, path, headers, body)
+    request({:pool, :"#{app}_pool"}, method, path, headers, body)
   end
 
   defmacro __using__(opts) do
     app = opts[:app] || raise ArgumentError, message: "option `:app` was not defined"
-    methods = quote bind_quoted: [app: app] do
+    pool = {:pool, :"#{app}_pool"}
+    methods = quote bind_quoted: [pool: pool] do
       methods = [:options, :get, :post, :put, :delete]
       for method <- methods do
-        def unquote(method)(path, headers, body), do: apply(Exrap.Client, unquote(method), [unquote(app), path, headers, body])
+        def unquote(method)(path, headers, body), do: apply(Exrap.Client, unquote(method), [unquote(pool), path, headers, body])
       end
     end
     quote do
       def start_link(), do: Exrap.Client.start_link(unquote(Macro.escape(opts)))
       unquote(methods)
-      def request(method, path, headers, body), do: Exrap.Client.request(unquote(app), method, path, headers, body)
+      def request(method, path, headers, body), do: Exrap.Client.request(unquote(pool), method, path, headers, body)
     end
   end
 end

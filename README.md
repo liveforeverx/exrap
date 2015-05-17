@@ -1,9 +1,11 @@
 Exrap
 =====
 
-Basic implementation of [XRAP](http://rfc.zeromq.org/spec:40), with additional mdns registration for auto discovery in a cluster.
+Basic, very experimental implementation of [XRAP](http://rfc.zeromq.org/spec:40) ( REST for intercluster communication, using ZMTP ), with additional mdns registration for auto discovery in a cluster.
 
-XML was nor implemented, nor planned at all, added msgpack as alternative to JSON for experiments.
+XML was nor implemented, nor planned at all, added msgpack as alternative to JSON.
+
+Example:
 
 ```elixir
 defmodule Client do
@@ -27,6 +29,9 @@ Example of usage:
 ```elixir
 Client.get("/", %{"client-header" => "foo"}, %{client_body: "test"})
 Client.request("GET", "/", %{"client-header" => "foo"}, %{client_body: "test"})
+
+# is the same as
+
 Exrap.Client.get(:example, "/", %{"client-header" => "foo"}, %{client_body: "test"})
 Exrap.Client.request(:example, "GET", "/", %{"client-header" => "foo"}, %{client_body: "test"})
 ```
