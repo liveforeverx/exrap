@@ -1,0 +1,3 @@
+%{"msgpax": {:hex, :msgpax, "0.7.0"},
+  "poison": {:hex, :poison, "1.4.0"},
+  "poolboy": {:hex, :poolboy, "1.5.1"}}
