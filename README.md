@@ -1,6 +1,8 @@
 Exrap
 =====
 
+Do not use it, it have some small bugs, which will be fixed somewhere later.
+
 Basic, very experimental implementation of [XRAP](http://rfc.zeromq.org/spec:40) ( REST for intercluster communication, using ZMTP ), with additional mdns registration for auto discovery in a cluster.
 
 XML was nor implemented, nor planned at all, added msgpack as alternative to JSON.
